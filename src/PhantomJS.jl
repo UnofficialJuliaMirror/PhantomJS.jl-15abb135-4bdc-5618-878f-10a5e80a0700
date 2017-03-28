@@ -1,21 +1,65 @@
 module PhantomJS
 
-export renderhtml
+export renderhtml, execjs
 
 const phantomjspath = joinpath(dirname(@__FILE__),
                                "../deps/usr/bin/phantomjs")
 
-# renders html to provided IO
-function renderhtml(source::IO, format::String="png")
+"""
+Function `execjs(jsscript::String)` executes script `jsscript` in Phantomjs.
+"""
+function execjs(jsscript::String)
+  mktempdir() do tdir
+    jspath = joinpath(tdir, randstring() * ".js")
+    open(io -> write(io, jsscript), jspath, "w")
+
+    run(`$phantomjspath $jspath`)
+  end
+
+  nothing
+end
+
+
+
+
+
+"""
+Function `renderhtml(source::IO; kwargs...)` loads the html provided in argument
+`source` and returns the page capture in a `Vector{UInt8}`
+
+Keyword arguments are :
+
+`format` (String, default "png") : output format, possible values are "png",
+"jpeg", "pdf", "bmp", "ppm" and "gif"
+`width` & `height` (Int) : simulated size of view used for the layout, in pixels.
+And output size except if `format` = "pdf" or if `smartSize` is `true`.
+`smartSize` (Bool, default `false`) : tries to guess the correct crop size
+`quality` (Int, default 75) : quality setting for compressed formats (jpeg and
+  png)
+
+Pdf format only :
+`paperSize` (String, default "A4") : possible values are
+"A3", "A4", "A5", "Legal", "Letter", "Tabloid"
+`orientation` (String, default "portait") : possible values are
+"portrait", "landscape"
+`margin` (String or Int, default "0") : Supported dimension units are: 'mm',
+'cm', 'in', 'px'. No unit means 'px'.
+
+
+"""
+function renderhtml(source::IO;
+                    format::String="png",
+                    width::Int=1024,
+                    height::Int=800,
+                    smartSize::Bool=false,
+                    quality::Int=75,
+                    paperSize::String="A4",
+                    orientation::String="portrait",
+                    margin::Union{String, Int}=0)
+
   local result
 
   mktempdir() do tdir
-
-    # source = IOBuffer(read("c:/temp/vegalite.html"))
-    # source = open("c:/temp/vegalite.html")
-    # tdir = "c:/temp"
-
-    # htmlpath, htmlio = mktemp(tdir)
     htmlpath = joinpath(tdir, randstring() * ".html")
     open(io -> write(io, read(source)), htmlpath, "w")
     htmlpath = replace(htmlpath, "\\", "/")
@@ -26,29 +70,34 @@ function renderhtml(source::IO, format::String="png")
     println(destpath)
 
     jsscript = """
-    "use strict";
-    var page = require('webpage').create(),
-        system = require('system'),
-        address, output, size, pageWidth, pageHeight;
+      "use strict";
+      var page = require('webpage').create(),
+          system = require('system'),
+          address, output, size, pageWidth, pageHeight;
 
-    address = 'file:///$htmlpath';
-    output = '$destpath';
+      address = 'file:///$htmlpath';
+      output = '$destpath';
 
-    page.viewportSize = { width: 600, height: 400 };
-    page.paperSize = { width: 600, height: 400, margin: '0px' };
+      page.viewportSize = { width: $width, height: $height };
 
-    page.open(address, function (status) {
-        if (status !== 'success') {
-            console.log('Unable to load the address : ' + address);
-            phantom.exit(1);
-        } else {
-            window.setTimeout(function () {
-                page.render(output);
-                console.log('output saved to : ' + output);
-                phantom.exit();
-            }, 200);
-        }
-    });
+      page.paperSize = { format: '$paperSize',
+                         orientation: '$orientation',
+                         margin: '$margin' };
+
+      page.open(address, function (status) {
+          if (status !== 'success') {
+              console.log('Unable to load the address : ' + address);
+              phantom.exit(1);
+          } else {
+              window.setTimeout(function () {
+                  page.render(output,
+                              {format: '$format',
+                               quality: '$quality'});
+                  console.log('output saved to : ' + output);
+                  phantom.exit();
+              }, 200);
+          }
+      });
     """
 
     jspath = joinpath(tdir, randstring() * ".js")
@@ -60,5 +109,10 @@ function renderhtml(source::IO, format::String="png")
 
   result
 end
+
+
+
+
+
 
 end # module
