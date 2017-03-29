@@ -3,7 +3,7 @@
 |Julia package | master tests (on nightly + release) | Coverage |
 |:--------:|:-----------------------------:|:-----------:|
 |[![PhantomJS](http://pkg.julialang.org/badges/PhantomJS_0.5.svg)](http://pkg.julialang.org/?pkg=PhantomJS&ver=0.5) | [![Build Status](https://travis-ci.org/fredo-dedup/PhantomJS.jl.svg?branch=master)](https://travis-ci.org/fredo-dedup/PhantomJS.jl) | [![Coverage Status](https://coveralls.io/repos/fredo-dedup/PhantomJS.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/fredo-dedup/PhantomJS.jl?branch=master) |
-|[![PhantomJS](http://pkg.julialang.org/badges/PhantomJS_0.6.svg)](http://pkg.julialang.org/?pkg=PhantomJS&ver=0.6) |  | [![codecov.io](http://codecov.io/github/fredo-dedup/PhantomJS.jl/coverage.svg?branch=master)](http://codecov.io/github/fredo-dedup/PhantomJS.jl?branch=master) |
+|[![PhantomJS](http://pkg.julialang.org/badges/PhantomJS_0.6.svg)](http://pkg.julialang.org/?pkg=PhantomJS&ver=0.6) | [![Build status](https://ci.appveyor.com/api/projects/status/ehm93gewha4355cg?svg=true)](https://ci.appveyor.com/project/fredo-dedup/phantomjs-jl) | [![codecov.io](http://codecov.io/github/fredo-dedup/PhantomJS.jl/coverage.svg?branch=master)](http://codecov.io/github/fredo-dedup/PhantomJS.jl?branch=master) |
 
 
 This package provides access to the PhantomJS headless browser (http://phantomjs.org/).
