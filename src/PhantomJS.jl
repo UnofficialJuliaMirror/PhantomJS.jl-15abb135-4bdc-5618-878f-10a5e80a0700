@@ -119,7 +119,6 @@ function renderhtml(source::IO;
                   page.render(output,
                               {format: '$format',
                                quality: '$quality'});
-                  console.log('output saved to : ' + output);
                   phantom.exit();
               }, 200);
           }

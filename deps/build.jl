@@ -51,6 +51,12 @@ type FileCopyRule <: BinDeps.BuildStep
 end
 Base.run(fc::FileCopyRule) = isfile(fc.dest) || cp(fc.src, fc.dest)
 
+type MakeExeRule <: BinDeps.BuildStep
+    path::AbstractString
+end
+Base.run(rule::MakeExeRule) = chmod(rule.path, 0o755)
+
+
 run(@build_steps begin
       CreateDirectory(downloadsdir, true)
       CreateDirectory(unzipdir, true)
@@ -60,5 +66,6 @@ run(@build_steps begin
             FileDownloader(url, joinpath(downloadsdir, downloadname))
             FileUnpacker(joinpath(downloadsdir, downloadname), unzipdir, exepath)
             FileCopyRule(joinpath(unzipdir,exepath), joinpath(destdir,exefile))
+            MakeExeRule(joinpath(destdir,exefile))
           end )
       end)
