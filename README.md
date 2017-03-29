@@ -1,25 +1,24 @@
 # PhantomJS
 
-[![Build Status](https://travis-ci.org/fredo-dedup/PhantomJS.jl.svg?branch=master)](https://travis-ci.org/fredo-dedup/PhantomJS.jl)
+|Julia package | master tests (on nightly + release) | Coverage |
+|:--------:|:-----------------------------:|:-----------:|
+|[![PhantomJS](http://pkg.julialang.org/badges/PhantomJS_0.5.svg)](http://pkg.julialang.org/?pkg=PhantomJS&ver=0.5) | [![Build Status](https://travis-ci.org/fredo-dedup/PhantomJS.jl.svg?branch=master)](https://travis-ci.org/fredo-dedup/PhantomJS.jl) | [![Coverage Status](https://coveralls.io/repos/fredo-dedup/PhantomJS.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/fredo-dedup/PhantomJS.jl?branch=master) |
+|[![PhantomJS](http://pkg.julialang.org/badges/PhantomJS_0.6.svg)](http://pkg.julialang.org/?pkg=PhantomJS&ver=0.6) |  | [![codecov.io](http://codecov.io/github/fredo-dedup/PhantomJS.jl/coverage.svg?branch=master)](http://codecov.io/github/fredo-dedup/PhantomJS.jl?branch=master) |
 
-[![Coverage Status](https://coveralls.io/repos/fredo-dedup/PhantomJS.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/fredo-dedup/PhantomJS.jl?branch=master)
-
-[![codecov.io](http://codecov.io/github/fredo-dedup/PhantomJS.jl/coverage.svg?branch=master)](http://codecov.io/github/fredo-dedup/PhantomJS.jl?branch=master)
 
 This package provides access to the PhantomJS headless browser (http://phantomjs.org/).
-The main use case is give have access to a platform that can process complex html
+The main use case is to have access to a platform that can process complex html
 files, including javascript code, to produce JPEG, PNG, etc.. images or PDF files.
 But the other uses such as website testing and page automation are of course still
 possible.
 
-The current Julia API is minimal. All suggestions and PR are all the more welcome.
+The current Julia API is minimal. So all suggestions and PR are all the more welcome.
 
 Exported functions are :
 - `execjs(jsscript::String)` : to execute the given script within PhantomJS
 
-example :
+example : Showing the version of PhantomJS
 ```
-# return PhantomJS version
 PhantomJS.execjs(
 """
   "use strict";
@@ -36,10 +35,8 @@ PhantomJS.execjs(
 to an image or a pdf (returned as a `Vector{UInt8}`). Type `? renderhtml` to see
  all the rendering options.
 
-example :
+example, converting an HMTL file to a pdf :
 ```
-# convert an HTML file to a pdf
-
 open(*html file path*) do io
   ret = renderhtml(io, format="pdf")
   open(io -> write(io, ret), *output file path*, "w")
