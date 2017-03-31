@@ -41,9 +41,9 @@ exemap = Dict(
 exepath = exemap[ostype]
 exefile = basename(exepath)
 
-destdir = Pkg.dir("PhantomJS", "deps/usr/bin")
-unzipdir = Pkg.dir("PhantomJS", "deps/src")
-downloadsdir = Pkg.dir("PhantomJS", "deps/downloads")
+destdir      = joinpath(dirname(@__FILE__), "usr/bin")
+unzipdir     = joinpath(dirname(@__FILE__), "src")
+downloadsdir = joinpath(dirname(@__FILE__), "downloads")
 
 type FileCopyRule <: BinDeps.BuildStep
     src::AbstractString
